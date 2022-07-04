@@ -1,0 +1,26 @@
+{
+    
+    "username": "", 
+    
+    "password": "",
+    
+    "address": {
+        "in": "", 
+        "province": "",
+        "city": "",
+        "district": ""
+    },
+	
+    "email": {
+        "enable": true,
+        
+        "sender": {
+            "username":"",
+            "password":""
+        },
+        
+        "receivers": [
+            ""
+        ]
+    }
+}
