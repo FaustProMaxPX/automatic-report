@@ -18,6 +18,7 @@ report_url = 'https://yqtb.nwpu.edu.cn/wx/ry/jrsb_xs.jsp'
 login_url = 'https://uis.nwpu.edu.cn/cas/login'
 # 配置文件位置
 conf_file = '/home/ubuntu/dev/python/info.json'
+log_file = '/home/ubuntu/dev/python/report/tianbao.log'
 
 rbxx_dict = {
     "学校": '1',
@@ -96,8 +97,9 @@ def report(driver:webdriver, info, is_conf):
     driver.get(report_url)
     rbxx = info['address']['in']
     label_num = rbxx_dict[rbxx]
+    driver.find_element(by=By.XPATH, value='//*[@class="layui-layer-btn0"]').click()
     if is_conf:
-        v1 = '//*[@id="rbxx_div"]/div[5]/' + 'label[' + label_num + ']'
+        v1 = '//*[@id="notlocation"]/' + 'label[' + label_num + ']'
         driver.find_element(by=By.XPATH, value=v1).click()
         
         time.sleep(1)
@@ -149,16 +151,19 @@ if __name__ == '__main__':
     driver = init_driver()
     
         
-    get_logger('test.log')
+    get_logger(log_file)
     logger.info("开始为%s疫情填报", info['username'])
     try:
         login(driver, info)
-        report(driver, info, True)
+        report(driver, info, info['address']['enable'])
     except Exception as e:
+        logging.info("find exception: %s", e)
+        
         logger.error("打卡失败，请手动前往打卡")
         logger.error("find exception: %s", e)
         exc_type, exc_value, exc_traceback = sys.exc_info()
         mail_msg = "打卡失败，请手动前往打卡\n检测到错误：{}\n".format(e)
+        logging.info("错误类型：{}\n堆栈信息：{}".format(exc_type, traceback.format_exc()))
         mail_msg += "错误类型：{}\n堆栈信息：{}".format(exc_type, traceback.format_exc())
     finally:
         if info['email']['enable']:

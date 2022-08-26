@@ -5,6 +5,7 @@
     "password": "",
     
     "address": {
+        "enable": false,
         "in": "", 
         "province": "",
         "city": "",
